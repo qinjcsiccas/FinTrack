@@ -422,7 +422,7 @@ if data_source:
                 fig_year.update_traces(textposition='outside')
             
             st.plotly_chart(fig_year, use_container_width=True, config={'displayModeBar': False})
-            st.caption("注：日均增长 = (当年最后一天总资产 - 当年第一天总资产) / 当年记录天数")
+            # st.caption("注：日均增长 = (当年最后一天总资产 - 当年第一天总资产) / 当年记录天数")
 
     # --- 4. Tab 3: 收支与分类 (恢复被删减的数据表) ---
     with tab3:
@@ -532,6 +532,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
