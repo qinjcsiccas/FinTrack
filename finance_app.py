@@ -152,6 +152,8 @@ def mask_fig(fig, axis='y'):
             y=1.02,
             xanchor="right",
             x=1
+        )
+    )
         
     return fig
 
@@ -539,6 +541,7 @@ else:
                 st.markdown(f.read())
         except FileNotFoundError:
             st.warning("⚠️ 文件夹中未找到 README.md，请创建该文件。")
+
 
 
 
