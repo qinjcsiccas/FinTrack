@@ -9,6 +9,31 @@ from datetime import datetime, timedelta
 st.set_page_config(page_title="Jincheng's 财务看板", layout="wide")
 st.markdown("""<style> .main { background-color: #f5f7f9; } </style>""", unsafe_allow_html=True)
 
+# --- 0. 移动端适配 CSS ---
+st.markdown("""
+    <style>
+        /* 1. 隐藏顶部的 Streamlit 汉堡菜单和红线 (可选，让 App 更沉浸) */
+        #MainMenu {visibility: hidden;}
+        header {visibility: hidden;}
+        
+        /* 2. 隐藏底部的 "Made with Streamlit" */
+        footer {visibility: hidden;}
+        
+        /* 3. 核心：减少页面边缘留白，手机上不再浪费空间 */
+        .block-container {
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+        
+        /* 4. 优化 Metric 指标卡的显示 (防止手机上字体过大换行) */
+        [data-testid="stMetricValue"] {
+            font-size: 1.5rem !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # --- 1. 侧边栏配置 ---
 with st.sidebar:
     st.header("⚙️ 数据与参数")
@@ -115,6 +140,18 @@ def mask_fig(fig, axis='y'):
         
         # 将文本模板置为空字符串，从而隐藏柱状图或热力图上的数字
         fig.update_traces(texttemplate="")
+
+    # === 🆕 新增：移动端图表布局优化 ===
+    fig.update_layout(
+        # 1. 减少图表四周的留白
+        margin=dict(l=10, r=10, t=30, b=10),
+        # 2. 图例放到顶部水平排列，不占用绘图区
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=1.02,
+            xanchor="right",
+            x=1
         
     return fig
 
@@ -263,11 +300,20 @@ if data_source:    # ✅ 改成 data_source (这个变量无论哪种情况都�
         display_velocity = 0
 
     # 在 KPI 栏位显示
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("当前总资产", kpi_total, f"最新: {kpi_change}")
-    c2.metric("当前阶段", curr_stage)
-    c3.metric("近365日均积累", f"¥{display_velocity:,.1f} /天")
-    c4.metric("现金占比 (Bank)", f"{(df['Bank'].iloc[-1]/curr_total)*100:.1f}%")
+    # c1, c2, c3, c4 = st.columns(4)
+    # c1.metric("当前总资产", kpi_total, f"最新: {kpi_change}")
+    # c2.metric("当前阶段", curr_stage)
+    # c3.metric("近365日均积累", f"¥{display_velocity:,.1f} /天")
+    # c4.metric("现金占比 (Bank)", f"{(df['Bank'].iloc[-1]/curr_total)*100:.1f}%")
+
+    # ✅ 移动端优化写法：分成两行
+    col_row1 = st.columns(2)
+    col_row1[0].metric("当前总资产", kpi_total, f"最新: {kpi_change}")
+    col_row1[1].metric("当前阶段", curr_stage)
+    
+    col_row2 = st.columns(2)
+    col_row2[0].metric("近365日均积累", f"¥{display_velocity:,.1f} /天")
+    col_row2[1].metric("现金占比", f"{(df['Bank'].iloc[-1]/curr_total)*100:.1f}%")
 
     # Tabs
     tab1, tab2, tab3, tab4 = st.tabs(["📈 趋势与月盈亏", "⏱️ 进阶速率", "💰 收支与分类", "🏆 预测与热力图"])
@@ -493,6 +539,7 @@ else:
                 st.markdown(f.read())
         except FileNotFoundError:
             st.warning("⚠️ 文件夹中未找到 README.md，请创建该文件。")
+
 
 
 
