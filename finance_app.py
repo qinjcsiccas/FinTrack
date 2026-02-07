@@ -8,25 +8,31 @@ from datetime import datetime, timedelta
 # --- 页面配置 ---
 st.set_page_config(page_title="Jincheng's 财务看板", layout="wide")
 
-# --- 0. 移动端适配 CSS (保留这个好评的布局) ---
+# --- 0. 移动端适配 CSS (舒适版) ---
 st.markdown("""
     <style>
-        /* 隐藏顶部菜单和页脚，让App更像原生 */
+        /* 1. 隐藏多余元素 */
         #MainMenu {visibility: hidden;}
         header {visibility: hidden;}
         footer {visibility: hidden;}
         
-        /* 调整边距，适配手机屏幕 */
+        /* 2. 核心布局调整：增加呼吸感 */
         .block-container {
-            padding-top: 1rem !important;
-            padding-bottom: 2rem !important;
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
+            padding-top: 2rem !important;    /* 顶部留出更多空间 */
+            padding-bottom: 3rem !important; /* 底部防止被手势条遮挡 */
+            padding-left: 1.2rem !important; /* 左侧标准 20px 边距 */
+            padding-right: 1.2rem !important;/* 右侧标准 20px 边距 */
         }
         
-        /* 优化指标卡字体大小 */
+        /* 3. 优化 Metric 指标卡的显示 */
         [data-testid="stMetricValue"] {
-            font-size: 1.5rem !important;
+            font-size: 1.4rem !important; /* 稍微调小一点点，防止数值太长换行 */
+        }
+        
+        /* 4. 优化 Tabs 的点击区域 */
+        button[data-baseweb="tab"] {
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -479,3 +485,4 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
