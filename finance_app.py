@@ -327,9 +327,14 @@ if data_source:
         row1[0].metric("当前总资产", kpi_total, f"最新: {kpi_change}")
         row1[1].metric("当前阶段", curr_stage)
         
+        if privacy_mode:
+            vel_str = "**** /天"
+        else:
+            vel_str = f"¥{display_velocity:,.1f} /天"
+            
         row2 = st.columns(2)
-        row2[0].metric("近365日均积累", f"¥{display_velocity:,.1f} /天")
-        row2[1].metric("现金占比 (Bank)", f"{(df['Bank'].iloc[-1]/curr_total)*100:.1f}%")
+        row2[0].metric("近365日均积累", vel_str)
+        row2[1].metric("现金占比", f"{(df['Bank'].iloc[-1]/curr_total)*100:.1f}%")
         st.divider()
 
     # --- 2. Tab 1: 趋势与月盈亏 (恢复原版图表配置) ---
@@ -525,6 +530,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
