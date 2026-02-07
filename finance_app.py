@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 # --- 页面配置 ---
 st.set_page_config(page_title="Jincheng's 财务看板", layout="wide")
 
-# --- 0. 移动端适配 CSS (舒适版) ---
+# --- 0. 移动端适配 CSS ---
 st.markdown("""
     <style>
         /* 1. 隐藏多余元素 */
@@ -532,6 +532,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
