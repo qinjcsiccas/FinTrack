@@ -96,11 +96,20 @@ with tab5:
 
     st.divider()
 
-    # --- B. 里程碑设置 (原版逻辑) ---
+    # --- B. 里程碑设置 (支持自定义标签) ---
     st.subheader("2. 职业/生活里程碑")
+    
+    # 🎯 核心修改：尝试获取 App 传来的 label 参数
+    app_label_param = query_params.get("label", "")
+    if isinstance(app_label_param, list): app_label_param = app_label_param[0]
+    
+    # 如果有 App 传来的值 (SICCAS)，就用它；否则默认用 "公司A"
+    default_company_name = app_label_param if app_label_param else "公司A"
+    
     default_milestones = pd.DataFrame([
-        {"日期": datetime(2023, 6, 14).date(), "名称": "公司A"}
+        {"日期": datetime(2023, 6, 14).date(), "名称": default_company_name}
     ])
+    
     ms_df = st.data_editor(
         default_milestones,
         num_rows="dynamic",
@@ -516,6 +525,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
