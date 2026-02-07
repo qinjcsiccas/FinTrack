@@ -13,23 +13,20 @@ st.markdown("""<style> .main { background-color: #f5f7f9; } </style>""", unsafe_
 with st.sidebar:
     st.header("⚙️ 数据与参数")
     
-    # === 🆕 新增：自动获取 URL 参数 ===
-    # 安卓 App 会把链接拼在后面，格式是 ?csv_url=https://...
-    query_params = st.query_params # Streamlit 新版写法
-    auto_url = query_params.get("csv_url", None)
+    # 1. 先初始化 data_source 为 None (防止后面报错)
+    data_source = None  
     
-    data_source = None
+    # 2. 获取 URL 参数
+    query_params = st.query_params
+    auto_url = query_params.get("csv_url", None)
     
     if auto_url:
         st.success("✅ 已自动同步云端数据")
-        # 直接把链接赋值给 data_source，pd.read_csv 原生支持读链接
-        data_source = auto_url
-        
-        # 加个强制刷新按钮，方便你修改 Google Sheet 后立刻看结果
+        data_source = auto_url  # 情况 A: 赋值为链接
         if st.button("🔄 刷新数据"):
             st.rerun()
     else:
-        # 如果没有链接，才显示上传框
+        # 情况 B: 赋值为上传的文件
         uploaded_file = st.file_uploader("上传 saving.csv", type="csv")
         if uploaded_file:
             data_source = uploaded_file
@@ -227,8 +224,8 @@ def calculate_milestone_velocity(df, step):
     return pd.DataFrame(milestones)
 
 # --- 5. 主程序 ---
-if uploaded_file:
-    df, monthly_diff, season_pivot = load_and_process_data(uploaded_file, start_dt, job_start_dt)
+if data_source:    # <--- 改成 data_source (它在上面肯定被定义了，要么是 None，要么是值)
+    df, monthly_diff, season_pivot = load_and_process_data(data_source, start_dt, job_start_dt)
     
     # 标题隐私处理
     title_goal = "****" if privacy_mode else f"¥{target_goal:,.0f}"
@@ -496,6 +493,7 @@ else:
                 st.markdown(f.read())
         except FileNotFoundError:
             st.warning("⚠️ 文件夹中未找到 README.md，请创建该文件。")
+
 
 
 
