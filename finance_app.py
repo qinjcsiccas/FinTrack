@@ -50,26 +50,49 @@ with tab5:
     st.header("⚙️ 数据与参数设置")
     
     # --- A. 数据源逻辑 ---
-    st.subheader("1. 数据源")
-    data_source = None
+    # --- A. 数据源逻辑 (升级版：双通道输入) ---
+    st.subheader("1. 数据源配置")
     
-    # 尝试自动获取 URL 参数
+    # 1. 尝试获取 App 传来的参数 (如果有，作为默认值填入框内)
     try:
         query_params = st.query_params
     except:
         query_params = st.experimental_get_query_params()
-    auto_url = query_params.get("csv_url", None)
-    if isinstance(auto_url, list): auto_url = auto_url[0]
+    app_url_param = query_params.get("csv_url", "")
+    if isinstance(app_url_param, list): app_url_param = app_url_param[0]
+
+    # 2. 链接输入框 (默认填入 App 参数，但允许你手动修改/粘贴新链接)
+    # value=... 只有在脚本第一次运行时生效，后续你的修改会被 Streamlit 记住
+    csv_link_input = st.text_input(
+        "🌐 云端链接 (Google Sheet CSV)", 
+        value=app_url_param or "",
+        placeholder="https://docs.google.com/.../pub?output=csv",
+        help="App 自动同步的链接显示在这里，你也可以手动修改它。"
+    )
+
+    # 3. 本地文件上传框 (始终显示)
+    uploaded_file = st.file_uploader("📂 或上传本地 CSV 文件 (优先级最高)", type="csv")
+
+    # 4. 决策逻辑：决定到底用哪个数据
+    data_source = None
     
-    if auto_url:
-        st.success(f"🔗 已链接云端数据")
-        data_source = auto_url
-        if st.button("🔄 刷新云端数据", use_container_width=True):
-            st.rerun()
+    if uploaded_file:
+        # 优先级 1：如果你传了本地文件，强制使用本地文件
+        st.info("✅ 模式：正在使用本地上传文件")
+        data_source = uploaded_file
+    elif csv_link_input:
+        # 优先级 2：没传文件，但框里有链接，使用链接
+        # 简单校验一下是不是网址
+        if csv_link_input.startswith("http"):
+            st.success("☁️ 模式：正在使用云端链接")
+            data_source = csv_link_input
+            # 加个刷新按钮，因为云端数据可能会变
+            if st.button("🔄 立即刷新云端数据", use_container_width=True):
+                st.rerun()
+        else:
+            st.warning("⚠️ 链接格式似乎不正确，请以 http 开头")
     else:
-        uploaded_file = st.file_uploader("上传 saving.csv (或从 App 首页绑定链接)", type="csv")
-        if uploaded_file:
-            data_source = uploaded_file
+        st.warning("👋 请在上方输入链接或上传文件")
 
     st.divider()
 
@@ -493,5 +516,6 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
