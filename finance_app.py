@@ -128,23 +128,31 @@ def fmt_money(val, is_kpi=False):
     return val
 
 def mask_fig(fig, axis='y'):
-    """隐藏图表中的金额轴和提示，并适配移动端布局"""
-    # 移动端优化：图例放顶部，减少边距
+    """
+    1. 隐藏图表中的金额轴和提示，适配隐私模式
+    2. [核心修改] 适配移动端：锁定坐标轴，防止手指误触导致无法滚动页面
+    """
+    # --- A. 移动端核心适配 ---
+    # 1. 调整边距和图例 (保留之前的优化)
     fig.update_layout(
-        margin=dict(l=10, r=10, t=30, b=10),
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
+        margin=dict(l=0, r=0, t=30, b=0),
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1),
+        # 2. 禁止鼠标/手指拖动图表 (dragmode=False)
+        dragmode=False 
     )
     
+    # 3. 关键：强制锁定 X 轴和 Y 轴，让触摸事件“穿透”图表传给页面滚动
+    fig.update_xaxes(fixedrange=True)
+    fig.update_yaxes(fixedrange=True)
+
+    # --- B. 隐私模式逻辑 (保留原版) ---
     if privacy_mode:
-        # 隐藏轴刻度
         if axis == 'y':
             fig.update_yaxes(showticklabels=False, title_text="****")
         elif axis == 'x':
             fig.update_xaxes(showticklabels=False, title_text="****")
         
-        # 隐藏悬停信息中的数值
         fig.update_traces(hovertemplate="%{x}<br>****") 
-        # 隐藏柱状图或热力图上的数字
         fig.update_traces(texttemplate="")
         
     return fig
@@ -310,7 +318,7 @@ if data_source:
                                          textangle=-90, xanchor="left", yanchor="top")
         
         mask_fig(fig_trend, axis='y')
-        st.plotly_chart(fig_trend, use_container_width=True)
+        st.plotly_chart(fig_trend, use_container_width=True, config={'displayModeBar': False})
         
         st.divider()
         
@@ -324,7 +332,7 @@ if data_source:
         
         mask_fig(fig_monthly, axis='y')
         if privacy_mode: fig_monthly.update_coloraxes(showscale=False)
-        st.plotly_chart(fig_monthly, use_container_width=True)
+        st.plotly_chart(fig_monthly, use_container_width=True, config={'displayModeBar': False})
 
     # --- 3. Tab 2: 进阶速率 (恢复原版) ---
     with tab2:
@@ -374,7 +382,7 @@ if data_source:
             else:
                 fig_year.update_traces(textposition='outside')
             
-            st.plotly_chart(fig_year, use_container_width=True)
+            st.plotly_chart(fig_year, use_container_width=True, config={'displayModeBar': False})
             st.caption("注：日均增长 = (当年最后一天总资产 - 当年第一天总资产) / 当年记录天数")
 
     # --- 4. Tab 3: 收支与分类 (恢复被删减的数据表) ---
@@ -401,7 +409,7 @@ if data_source:
         
         mask_fig(fig_tag, axis='x')
         if privacy_mode: fig_tag.update_coloraxes(showscale=False)
-        st.plotly_chart(fig_tag, use_container_width=True)
+        st.plotly_chart(fig_tag, use_container_width=True, config={'displayModeBar': False})
         
         st.divider()
         
@@ -479,10 +487,11 @@ if data_source:
                 fig_heat.update_traces(hovertemplate="年份: %{y}<br>月份: %{x}<br>****")
                 fig_heat.update_traces(texttemplate="")
                 
-            st.plotly_chart(fig_heat, use_container_width=True)
+            st.plotly_chart(fig_heat, use_container_width=True, config={'displayModeBar': False})
 
 else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
