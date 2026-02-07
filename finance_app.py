@@ -12,7 +12,27 @@ st.markdown("""<style> .main { background-color: #f5f7f9; } </style>""", unsafe_
 # --- 1. 侧边栏配置 ---
 with st.sidebar:
     st.header("⚙️ 数据与参数")
-    uploaded_file = st.file_uploader("上传 saving.csv", type="csv")
+    
+    # === 🆕 新增：自动获取 URL 参数 ===
+    # 安卓 App 会把链接拼在后面，格式是 ?csv_url=https://...
+    query_params = st.query_params # Streamlit 新版写法
+    auto_url = query_params.get("csv_url", None)
+    
+    data_source = None
+    
+    if auto_url:
+        st.success("✅ 已自动同步云端数据")
+        # 直接把链接赋值给 data_source，pd.read_csv 原生支持读链接
+        data_source = auto_url
+        
+        # 加个强制刷新按钮，方便你修改 Google Sheet 后立刻看结果
+        if st.button("🔄 刷新数据"):
+            st.rerun()
+    else:
+        # 如果没有链接，才显示上传框
+        uploaded_file = st.file_uploader("上传 saving.csv", type="csv")
+        if uploaded_file:
+            data_source = uploaded_file
     
     st.divider()
     st.subheader("📅 职业/生活里程碑")
@@ -476,6 +496,7 @@ else:
                 st.markdown(f.read())
         except FileNotFoundError:
             st.warning("⚠️ 文件夹中未找到 README.md，请创建该文件。")
+
 
 
 
