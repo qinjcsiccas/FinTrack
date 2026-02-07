@@ -6,7 +6,7 @@
 ## 🚀 快速启动（在线）
 **网页访问**：https://financeapp-hlkzd74wexaivdv7lxsajn.streamlit.app/
 
-**样本数据**：https://github.com/qinjcsiccas/finance_app/blob/main/saving_sample.csv
+**样本数据**：https://docs.google.com/spreadsheets/d/e/2PACX-1vT9kSh7lbha1neGmvhckFlXPEmAsMF9MpxLgbUXCIGEB7VUwHSqfi6oNmyFCn0ERj0TdB7Cv0ak_PxY/pub?output=csv
 
 ## 🚀 快速启动（本地）
 1. **环境准备**：确保电脑已安装 Python。
