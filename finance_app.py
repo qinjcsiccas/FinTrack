@@ -382,8 +382,8 @@ if data_source:
                            hover_data=['达成日期'],
                            labels={"所用天数": "耗时 (天)", "里程碑": "资产里程碑"},
                            color='所用天数', color_continuous_scale='RdYlBu_r')
-            st.plotly_chart(fig_v, use_container_width=True, config={'displayModeBar': False})
             mask_fig(fig_v, axis='y')
+            st.plotly_chart(fig_v, use_container_width=True, config={'displayModeBar': False})            
         else:
             st.info("数据跨度不足。")        
             
@@ -532,6 +532,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
