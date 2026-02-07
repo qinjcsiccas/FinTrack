@@ -383,9 +383,9 @@ if data_source:
                            labels={"所用天数": "耗时 (天)", "里程碑": "资产里程碑"},
                            color='所用天数', color_continuous_scale='RdYlBu_r')
             st.plotly_chart(fig_v, use_container_width=True, config={'displayModeBar': False})
+            mask_fig(fig_v, axis='y')
         else:
-            st.info("数据跨度不足。")
-        mask_fig(fig_v, axis='y')
+            st.info("数据跨度不足。")        
             
         st.divider()
         st.subheader("🗓️ 年度平均存钱速率")
@@ -516,7 +516,7 @@ if data_source:
                                  text_auto=text_auto_val, 
                                  labels={"color": "净值 (k)", "x": "月份", "y": "年份"},
                                  color_continuous_scale='RdYlGn', aspect="auto")
-            
+            mask_fig(fig_heat, axis='y')
             # 恢复原版：强制显示整数年份
             fig_heat.update_yaxes(dtick=1)
             fig_heat.update_xaxes(dtick=1)
@@ -532,6 +532,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
