@@ -31,8 +31,8 @@ st.markdown("""
         
         /* 4. 优化 Tabs 的点击区域 */
         button[data-baseweb="tab"] {
-            padding-left: 1rem;
-            padding-right: 1rem;
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
         }
     </style>
 """, unsafe_allow_html=True)
@@ -532,6 +532,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
