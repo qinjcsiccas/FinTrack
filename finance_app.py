@@ -224,7 +224,7 @@ def calculate_milestone_velocity(df, step):
     return pd.DataFrame(milestones)
 
 # --- 5. 主程序 ---
-if data_source:    # <--- 改成 data_source (它在上面肯定被定义了，要么是 None，要么是值)
+if data_source:    # ✅ 改成 data_source (这个变量无论哪种情况都有值)
     df, monthly_diff, season_pivot = load_and_process_data(data_source, start_dt, job_start_dt)
     
     # 标题隐私处理
@@ -493,6 +493,7 @@ else:
                 st.markdown(f.read())
         except FileNotFoundError:
             st.warning("⚠️ 文件夹中未找到 README.md，请创建该文件。")
+
 
 
 
