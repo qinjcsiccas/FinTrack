@@ -385,6 +385,7 @@ if data_source:
             st.plotly_chart(fig_v, use_container_width=True, config={'displayModeBar': False})
         else:
             st.info("数据跨度不足。")
+        mask_fig(fig_v, axis='y')
             
         st.divider()
         st.subheader("🗓️ 年度平均存钱速率")
@@ -410,6 +411,7 @@ if data_source:
                 labels={"日均增长": "日均增长 (元/天)", "年份": "年份"},
                 color='日均增长', color_continuous_scale='GnBu'
             )
+            mask_fig(fig_year, axis='y')
             fig_year.update_xaxes(dtick=1) # 强制显示整数年份
             
             if privacy_mode:
@@ -530,6 +532,7 @@ else:
     # 引导页
     with kpi_placeholder:
         st.info("👋 欢迎！请点击下方的 **[⚙️ 设置]** 标签页来绑定数据。")
+
 
 
 
