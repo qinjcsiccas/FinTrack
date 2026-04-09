@@ -140,7 +140,7 @@ with tab5:
     c_set1, c_set2 = st.columns(2)
     with c_set1:
         sd_input = st.date_input("记账起始日", datetime(2023, 2, 25))
-        target_goal = st.number_input("目标金额 (元)", value=1000000, step=100000)
+        target_goal = st.number_input("目标金额 (元)", value=1500000, step=100000)
     with c_set2:
         velocity_step = st.number_input("进阶步长 (元)", value=100000, step=10000)
         privacy_mode = st.toggle("👁️ 隐私模式 (隐藏金额)", value=False)
