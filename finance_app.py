@@ -250,7 +250,7 @@ def load_and_process_data(file, start_date_val, job_start_val):
     df['Stage'] = df['Date'].apply(assign_stage_dynamic)
     
     # 月度数据
-    df_res = df.set_index('Date')['Total_Assets'].resample('M').last()
+    df_res = df.set_index('Date')['Total_Assets'].resample('ME').last()
     monthly_diff = df_res.diff().fillna(0)
     
     # 季节性数据
